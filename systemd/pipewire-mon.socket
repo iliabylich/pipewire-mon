@@ -1,0 +1,8 @@
+[Unit]
+Description=PW monitor socket
+
+[Socket]
+ListenStream=%t/pipewire-mon.sock
+
+[Install]
+WantedBy=sockets.target

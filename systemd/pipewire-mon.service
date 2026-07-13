@@ -1,0 +1,8 @@
+[Unit]
+Description=NM monitor service
+Requires=pipewire-mon.socket pipewire.service
+After=pipewire-mon.socket pipewire.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/pipewire-mon --systemd
