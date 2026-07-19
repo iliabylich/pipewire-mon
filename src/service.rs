@@ -22,7 +22,7 @@ impl PwModService {
     }
 }
 
-impl Service for PwModService {
+impl Service<1> for PwModService {
     type Error = PwMonServiceError;
 
     fn pollfds(&mut self) -> Result<impl Iterator<Item = rustix::event::PollFd<'_>>, Self::Error> {
@@ -70,15 +70,18 @@ impl Service for PwModService {
         Err(anyhow::anyhow!("Pipewire poll error: got revents {revents:?}").into())
     }
 
-    fn state_as_serialized_bufs(&self) -> impl Iterator<Item = Vec<u8>> {
-        let mut bufs = vec![];
+    fn on_client_connected(&mut self, mut write: impl FnMut(Vec<u8>)) -> Result<(), Self::Error> {
         if let Some(volume) = self.volume.as_option() {
-            bufs.push(Event::Volume(volume).serialize().to_vec());
+            (write)(Event::Volume(volume).serialize().to_vec());
         }
         if let Some(muted) = self.muted.as_option() {
-            bufs.push(Event::Mute(muted).serialize().to_vec());
+            (write)(Event::Mute(muted).serialize().to_vec());
         }
-        bufs.into_iter()
+        Ok(())
+    }
+
+    fn on_client_request(&mut self, _request: [u8; 1]) -> Result<(), Self::Error> {
+        Ok(())
     }
 }
 
