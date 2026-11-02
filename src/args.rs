@@ -13,7 +13,7 @@ const USAGE: &str = "
 Usage: pw-mon [--systemd|--dev]
 
 --systemd: runs daemon under systemd and expects it to pass a socket via sd_listen_fds()
-    --dev: starts listening on $XDG_RUNTIME_DIR/pw-mon-dev.sock
+    --dev: starts listening on ./pw-mod-dev.sock (in the current directory)
 ";
 fn print_usage_and_exit() -> ! {
     eprintln!("{USAGE}");
